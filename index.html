@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
         integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://unpkg.com/petite-vue" defer init></script>
-
+    <!-- <script src="https://unpkg.com/petite-vue" defer init></script> -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         .page {
             display: none;
@@ -36,76 +36,91 @@
     <title>Point Management</title>
 </head>
 
-<body v-scope="{open: true}">
-    <header class="bg-gradient-to-r from-green-400 to-blue-500 text-white pb-1 shadow-md select-none">
-        <i class="ml-2 mt-1 text-xl cursor-pointer fa-solid fa-bars transition-all duration-300"
-            :class="open ? '': 'fa-rotate-90'" @click="open=!open"></i>
-        <a href="#home" class="inline ml-1 text-xl">
-            Point Management
-        </a>
-        <button class="text-xl float-right mr-5">
-            Login
-        </button>
-    </header>
-    <nav id="navbar" :class="open ? 'w-36' : 'w-8'"
-        class="fixed h-full bg-gray-200  bg-opacity-75 transition-all duration-500 whitespace-nowrap overflow-hidden">
-        <ul>
-            <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
-                <a href="#hoc-tap" class="font-medium">
-                    <i class="w-3 fa-lg fa-solid fa-book mx-2 mt-4"></i>
-                    <span v-if="open">
-                        Diem hoc tap
-                    </span>
-                </a>
-            </li>
-            <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
-                <a href="#ne-nep" class="font-medium">
-                    <i class="w-3 fa-solid fa-scale-balanced mx-2"></i>
-                    <span v-if="open">
-                        Diem ne nep
-                    </span>
-                </a>
-            </li>
-            <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
-                <a href="#vi-pham" class="font-medium">
-                    <i class="w-3 fa-lg fa-solid fa-triangle-exclamation mx-2"></i>
-                    <span v-if="open">
-                        Vi pham
-                    </span>
-                </a>
-            </li>
-            <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
-                <a href="#quan-li" class="font-medium">
-                    <i class="w-3 fa-solid fa-warehouse mx-2"></i>
-                    <span v-if="open">
-                        Quan li chung
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <div id="hoc-tap" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-        Diem hoc tap
-    </div>
-    <div id="ne-nep" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-        Diem ne nep
-    </div>
-    <div id="vi-pham" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-        Vi pham
-    </div>
-    <div id="quan-li" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-        Quan li chung
-    </div>
-    <div id="home" class="page default font-bold" :class="open ? 'ml-44' : 'ml-10'">
-        Home Page
-    </div>
+<body>
+    <template id="main">
+        <header v-if="store.isLoggedIn"
+            class="bg-gradient-to-r from-green-400 to-blue-500 text-white  shadow-md select-none">
+            <i class="ml-2 mt-1 text-xl cursor-pointer fa-solid fa-bars transition-all duration-300"
+                :class="open ? '': 'fa-rotate-90'" @click="open=!open"></i>
+            <a href="#home" class="inline ml-1 text-xl">
+                Point Management
+            </a>
 
-    <footer class="absolute w-full bottom-0 text-center p-2 bg-gray-200 ">
-        <span class="inline">
-            © 2022 Copyright:
-        </span>
-        <a class="font-semibold">NAT &#128540</a>
-    </footer>
+        </header>
+
+        <div id="g_id_onload" data-client_id="965801370073-hj7hghj42sr7aoqbc1uckfdopipu2625.apps.googleusercontent.com"
+            data-callback="HandleLogin" data-auto_select="true">
+        </div>
+        <div v-if="!store.isLoggedIn" class="g_id_signin grid h-screen place-items-center" data-theme="filled_blue"
+            data-text="signin" data-shape="pill" data-type="standard"></div>
+
+        <div v-if="store.isLoggedIn">
+            <nav id="navbar" :class="open ? 'w-36' : 'w-8'"
+                class="fixed h-full bg-gray-200  bg-opacity-75 transition-all duration-500 whitespace-nowrap overflow-hidden">
+                <ul>
+                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
+                        <a href="#hoc-tap" class="font-medium">
+                            <i class="w-3 fa-lg fa-solid fa-book mx-2 mt-4"></i>
+                            <span v-if="store.open">
+                                Diem hoc tap
+                            </span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
+                        <a href="#ne-nep" class="font-medium">
+                            <i class="w-3 fa-solid fa-scale-balanced mx-2"></i>
+                            <span v-if="store.open">
+                                Diem ne nep
+                            </span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
+                        <a href="#vi-pham" class="font-medium">
+                            <i class="w-3 fa-lg fa-solid fa-triangle-exclamation mx-2"></i>
+                            <span v-if="store.open">
+                                Vi pham
+                            </span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
+                        <a href="#quan-li" class="font-medium">
+                            <i class="w-3 fa-solid fa-warehouse mx-2"></i>
+                            <span v-if="store.open">
+                                Quan li chung
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div id="hoc-tap" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
+                Diem hoc tap
+            </div>
+            <div id="ne-nep" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
+                Diem ne nep
+            </div>
+            <div id="vi-pham" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
+                Vi pham
+            </div>
+            <div id="quan-li" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
+                Quan li chung
+            </div>
+            <div id="home" class="page default font-bold" :class="open ? 'ml-44' : 'ml-10'">
+                Home Page
+            </div>
+        </div>
+
+        <footer v-if="store.isLoggedIn" class="absolute w-full bottom-0 text-center p-2 bg-gray-200 ">
+            <span class="inline">
+                © 2022 Copyright:
+            </span>
+            <a class="font-semibold">NAT &#128540</a>
+        </footer>
+    </template>
+
+    <div v-scope="MainComponent()" @vue:mounted="mounted()"></div>
+    <script type="module" src="./js/main.js"></script>
+
 </body>
 
 </html>
