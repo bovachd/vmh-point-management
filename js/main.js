@@ -1,8 +1,25 @@
 
 import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
 const store = reactive({
-    open: true,
-    isLoggedIn: false,
+    open: false,
+    isLoggedIn: true,
+    diemHocTap: [],
+    diemNeNep: [],
+    viPham: [],
+    handleUploadDiemHocTap(event) {
+        const fileList = event.target.files;
+        alert(`Da upload file thanh cong ${fileList[0].name}`)
+    },
+
+    handleUploadDiemNeNep(event) {
+        const fileList = event.target.files;
+        alert(`Da upload file thanh cong ${fileList[0].name}`)
+    },
+
+    handleUploadViPham(event) {
+        const fileList = event.target.files;
+        alert(`Da upload file thanh cong ${fileList[0].name}`)
+    }
 })
 
 function MainComponent() {
