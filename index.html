@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
         integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
-        integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/umd/supabase.min.js"></script>
+
     <!-- <script src="https://unpkg.com/petite-vue" defer init></script> -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
@@ -25,7 +25,7 @@
 
         /* This displays the page corresponding to the one you clicked on */
         :target {
-            display: block;
+            display: flex;
         }
 
         :target~.default {
@@ -39,9 +39,9 @@
 <body>
     <template id="main">
         <header v-if="store.isLoggedIn"
-            class="bg-gradient-to-r from-green-400 to-blue-500 text-white  shadow-md select-none">
+            class="bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-md select-none">
             <i class="ml-2 mt-1 text-xl cursor-pointer fa-solid fa-bars transition-all duration-300"
-                :class="open ? '': 'fa-rotate-90'" @click="open=!open"></i>
+                :class="store.open ? '': 'fa-rotate-90'" @click="store.open=!store.open"></i>
             <a href="#home" class="inline ml-1 text-xl">
                 Point Management
             </a>
@@ -55,12 +55,12 @@
             data-text="signin" data-shape="pill" data-type="standard"></div>
 
         <div v-if="store.isLoggedIn">
-            <nav id="navbar" :class="open ? 'w-36' : 'w-8'"
+            <nav id="navbar" :class="store.open ? 'w-36' : 'w-[29px]'"
                 class="fixed h-full bg-gray-200  bg-opacity-75 transition-all duration-500 whitespace-nowrap overflow-hidden">
                 <ul>
                     <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
                         <a href="#hoc-tap" class="font-medium">
-                            <i class="w-3 fa-lg fa-solid fa-book mx-2 mt-4"></i>
+                            <i class="w-3 fa-lg fa-solid fa-book mx-1 mt-4"></i>
                             <span v-if="store.open">
                                 Diem hoc tap
                             </span>
@@ -68,7 +68,7 @@
                     </li>
                     <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
                         <a href="#ne-nep" class="font-medium">
-                            <i class="w-3 fa-solid fa-scale-balanced mx-2"></i>
+                            <i class="w-3 fa-solid fa-scale-balanced mx-1"></i>
                             <span v-if="store.open">
                                 Diem ne nep
                             </span>
@@ -76,7 +76,7 @@
                     </li>
                     <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
                         <a href="#vi-pham" class="font-medium">
-                            <i class="w-3 fa-lg fa-solid fa-triangle-exclamation mx-2"></i>
+                            <i class="w-3 fa-lg fa-solid fa-triangle-exclamation mx-1"></i>
                             <span v-if="store.open">
                                 Vi pham
                             </span>
@@ -84,7 +84,7 @@
                     </li>
                     <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
                         <a href="#quan-li" class="font-medium">
-                            <i class="w-3 fa-solid fa-warehouse mx-2"></i>
+                            <i class="w-3 fa-solid fa-warehouse mx-1"></i>
                             <span v-if="store.open">
                                 Quan li chung
                             </span>
@@ -93,20 +93,53 @@
                 </ul>
             </nav>
 
-            <div id="hoc-tap" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-                Diem hoc tap
+            <div id="hoc-tap" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
+                <div class="w-auto">
+                    <p class="font-bold text-center">Diem hoc tap</p>
+                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
+                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
+                                @change="store.handleUploadDiemHocTap" />
+                            <button
+                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="ne-nep" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-                Diem ne nep
+            <div id="ne-nep" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
+                <div class="w-auto">
+                    <p class="font-bold text-center">Diem ne nep</p>
+                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
+                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
+                                @change="store.handleUploadDiemNeNep" />
+                            <button
+                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="vi-pham" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-                Vi pham
+            <div id="vi-pham" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
+                <div class="w-auto">
+                    <p class="font-bold text-center">Vi pham</p>
+                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
+                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
+                                @change="store.handleUploadViPham" />
+                            <button
+                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="quan-li" class="page font-bold" :class="open ? 'ml-44' : 'ml-10'">
-                Quan li chung
+            <div id="quan-li" class="page font-bold">
+                <p class="ml-[50vw] font-bold">Quan li chung</p>
             </div>
-            <div id="home" class="page default font-bold" :class="open ? 'ml-44' : 'ml-10'">
-                Home Page
+            <div id="home" class="page default font-bold">
+                <p class="ml-[50vw]">Home page</p>
             </div>
         </div>
 
@@ -120,6 +153,7 @@
 
     <div v-scope="MainComponent()" @vue:mounted="mounted()"></div>
     <script type="module" src="./js/main.js"></script>
+    <script src="./js/file-upload.js"></script>
 
 </body>
 
