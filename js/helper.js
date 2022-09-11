@@ -199,7 +199,7 @@ export function readFileDiemHocTap(file) {
 }
 
 export function readFileDiemNeNep(excelFile) {
-  if (!file.name.endsWith(".xlsx")) {
+  if (!excelFile.name.endsWith(".xlsx")) {
     pushNotification(
       "error",
       "File không đúng định dạng",
