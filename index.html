@@ -9,10 +9,18 @@
         integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/umd/supabase.min.js"></script>
-
     <!-- <script src="https://unpkg.com/petite-vue" defer init></script> -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <style>
         .page {
             display: none;
@@ -52,15 +60,16 @@
             data-callback="HandleLogin" data-auto_select="true">
         </div>
         <div v-if="!store.isLoggedIn" class="g_id_signin grid h-screen place-items-center" data-theme="filled_blue"
-            data-text="signin" data-shape="pill" data-type="standard"></div>
+            data-text="signin" data-shape="pill" data-type="standard">
+        </div>
 
-        <div v-if="store.isLoggedIn">
+        <div v-if="store.isLoggedIn" class="h-full w-full">
             <nav id="navbar" :class="store.open ? 'w-36' : 'w-[29px]'"
-                class="fixed h-full bg-gray-200  bg-opacity-75 transition-all duration-500 whitespace-nowrap overflow-hidden">
+                class="fixed h-full bg-gray-200 bg-opacity-75 transition-all duration-500 whitespace-nowrap overflow-hidden">
                 <ul>
-                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200">
+                    <li class="hover:bg-opacity-25 hover:bg-green-500 transition-colors duration-200 mt-2">
                         <a href="#hoc-tap" class="font-medium">
-                            <i class="w-3 fa-lg fa-solid fa-book mx-1 mt-4"></i>
+                            <i class="w-3 fa-lg fa-solid fa-book mx-1"></i>
                             <span v-if="store.open">
                                 Diem hoc tap
                             </span>
@@ -92,47 +101,71 @@
                     </li>
                 </ul>
             </nav>
-
-            <div id="hoc-tap" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
-                <div class="w-auto">
-                    <p class="font-bold text-center">Diem hoc tap</p>
-                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
-                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
-                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
-                                @change="store.handleUploadDiemHocTap" />
-                            <button
-                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
-                            </button>
+ 
+            <div id="hoc-tap" class="page"> 
+                <div class="grid place-items-center w-full h-full">
+                    <div class="w-[415px]">
+                        <p class="font-bold text-center my-2">Điểm học tập</p>
+                        <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-lg">
+                            <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                                <input class="ml-2 mt-3" type="file" required
+                                    @change="store.handleUploadDiemHocTap" />
+                                <button class="mr-2 my-2 p-2 h-[40px] w-[100px]
+                                    rounded-lg bg-gradient-to-r from-green-400 to-blue-500
+                                    font-bold text-white
+                                    hover:scale-110 transition duration-300 ease-in-out
+                                    hover:shadow-lg
+                                    ">Import
+    
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </div> 
+                    <div class="pb-8 pt-2 w-[95%]" id="diem-hoc-tap-wrapper"></div>
+                </div> 
+            </div>
+            <div id="ne-nep" class="page">
+                <div class="grid place-items-center w-full h-full">
+                    <div class="w-[415px]">
+                        <p class="font-bold text-center my-2">Điểm nề nếp</p>
+                        <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-lg">
+                            <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                                <input class="ml-2 mt-3" type="file" required
+                                    @change="store.handleUploadDiemNeNep" />
+                                <button class="mr-2 my-2 p-2 h-[40px] w-[100px]
+                                    rounded-lg bg-gradient-to-r from-green-400 to-blue-500
+                                    font-bold text-white
+                                    hover:scale-110 transition duration-300 ease-in-out
+                                    hover:shadow-lg
+                                    ">Import
+    
+                                </button>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="pb-8 pt-2 w-auto" id="diem-ne-nep-wrapper"></div>
                 </div>
             </div>
-            <div id="ne-nep" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
-                <div class="w-auto">
-                    <p class="font-bold text-center">Diem ne nep</p>
-                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
-                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
-                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
-                                @change="store.handleUploadDiemNeNep" />
-                            <button
-                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
-                            </button>
+            <div id="vi-pham" class="page">
+                <div class="grid place-items-center w-full h-full">
+                    <div class="w-[415px]">
+                        <p class="font-bold text-center my-2">Vi phạm</p>
+                        <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-lg">
+                            <div class="flex justify-center m-[2px] rounded-lg bg-white">
+                                <input class="ml-2 mt-3" type="file" required
+                                    @change="store.handleUploadViPham" />
+                                <button class="mr-2 my-2 p-2 h-[40px] w-[100px]
+                                    rounded-lg bg-gradient-to-r from-green-400 to-blue-500
+                                    font-bold text-white
+                                    hover:scale-110 transition duration-300 ease-in-out
+                                    hover:shadow-lg
+                                    ">Import
+    
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div id="vi-pham" class="page flex w-screen h-[100vh - 1rem] justify-center item-center">
-                <div class="w-auto">
-                    <p class="font-bold text-center">Vi pham</p>
-                    <div class="flex justify-center bg-gradient-to-r from-green-400 to-blue-500 mt-1 rounded-lg">
-                        <div class="flex justify-center m-[2px] rounded-lg bg-white">
-                            <input class="ml-2 mt-3" type="file" ref="diem-hoc-tap" required
-                                @change="store.handleUploadViPham" />
-                            <button
-                                class="mr-2 my-2 p-2 h-[40px] w-[100px] rounded-lg bg-gradient-to-r from-green-400 to-blue-500 font-bold text-white">Import
-                            </button>
-                        </div>
-                    </div>
+                    </div> 
+                    <div class="pb-8 pt-2 w-auto" id="vi-pham-wrapper"></div>
                 </div>
             </div>
             <div id="quan-li" class="page font-bold">
@@ -142,8 +175,8 @@
                 <p class="ml-[50vw]">Home page</p>
             </div>
         </div>
-
-        <footer v-if="store.isLoggedIn" class="absolute w-full bottom-0 text-center p-2 bg-gray-200 ">
+ 
+        <footer v-if="store.isLoggedIn" class="fixed left-0 bottom-0 w-full text-center z-1 pb-1 bg-gray-200 ">
             <span class="inline">
                 © 2022 Copyright:
             </span>
@@ -152,8 +185,8 @@
     </template>
 
     <div v-scope="MainComponent()" @vue:mounted="mounted()"></div>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <script type="module" src="./js/main.js"></script>
-    <script src="./js/file-upload.js"></script>
 
 </body>
 
