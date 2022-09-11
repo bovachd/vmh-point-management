@@ -103,6 +103,15 @@ function checkFileDiemNeNep(headers = []) {
 }
 
 export function readFileDiemHocTap(file) {
+  if (!file.name.endsWith(".xlsx")) {
+    pushNotification(
+      "error",
+      "File không đúng định dạng",
+      "Chỉ nhận file có đuôi .xlsx thôi đó &#128519;"
+    );
+    return;
+  }
+
   var reader = new FileReader();
   let result = [];
   reader.onload = function (e) {
@@ -125,6 +134,14 @@ export function readFileDiemHocTap(file) {
       return;
     }
 
+    pushNotification(
+      "success",
+      "Upload thành công",
+      "Upload dữ liệu điểm học tập thành công"
+    );
+
+    let dataToShow = [];
+
     Object.values(sheetData).forEach((element, index) => {
       if (index !== 0) {
         result.push({
@@ -146,14 +163,9 @@ export function readFileDiemHocTap(file) {
           yeu_3_5: element[14],
           vi_pham: element[15],
         });
+        dataToShow.push(element);
       }
     });
-
-    pushNotification(
-      "success",
-      "Upload thành công",
-      "Upload dữ liệu điểm học tập thành công"
-    );
 
     new gridjs.Grid({
       columns: [
@@ -177,7 +189,7 @@ export function readFileDiemHocTap(file) {
           width: "auto",
         },
       ],
-      data: result,
+      data: dataToShow,
       pagination: true,
     }).render(document.getElementById("diem-hoc-tap-wrapper"));
 
@@ -187,6 +199,15 @@ export function readFileDiemHocTap(file) {
 }
 
 export function readFileDiemNeNep(excelFile) {
+  if (!file.name.endsWith(".xlsx")) {
+    pushNotification(
+      "error",
+      "File không đúng định dạng",
+      "Chỉ nhận file có đuôi .xlsx thôi đó &#128519;"
+    );
+    return;
+  }
+
   var reader = new FileReader();
   let result = [];
   reader.onload = function (e) {
@@ -208,7 +229,14 @@ export function readFileDiemNeNep(excelFile) {
       return;
     }
 
+    pushNotification(
+      "success",
+      "Upload thành công",
+      "Upload dữ liệu điểm nề nếp thành công"
+    );
+
     let week = sheetNames[0].split(" ")[1];
+    let dataToShow = [];
 
     Object.values(sheetData).forEach((element, index) => {
       if (index !== 0) {
@@ -228,12 +256,6 @@ export function readFileDiemNeNep(excelFile) {
       }
     });
 
-    pushNotification(
-      "success",
-      "Upload thành công",
-      "Upload dữ liệu điểm nề nếp thành công"
-    );
-
     new gridjs.Grid({
       columns: [
         { name: "Lớp" },
@@ -249,7 +271,7 @@ export function readFileDiemNeNep(excelFile) {
         },
         { name: "Bí thư chấm" },
       ],
-      data: result,
+      data: dataToShow,
       pagination: true,
     }).render(document.getElementById("diem-ne-nep-wrapper"));
 
@@ -258,16 +280,26 @@ export function readFileDiemNeNep(excelFile) {
   reader.readAsArrayBuffer(excelFile);
 }
 
-export function pushNotification(_status, _title, message) {
+export function readFileViPham(excelFile) {
+  pushNotification(
+    "warning",
+    "Tính năng chưa hoàn thiện",
+    "Tính năng này hiện chưa được triển khai đâu nha &#128555;"
+  );
+  return;
+}
+
+function pushNotification(_status, _title, message) {
+  let autoClose = _status !== "error";
   new Notify({
     status: _status,
     title: _title,
     text: message,
-    effect: "slide",
+    effect: "fade",
     speed: 300,
     showIcon: true,
     showCloseButton: true,
-    autoclose: _status == "error" ? false : true,
+    autoclose: autoClose,
     autotimeout: 3000,
     gap: 10,
     distance: 20,

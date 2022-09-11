@@ -3,7 +3,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import {
   readFileDiemHocTap,
   readFileDiemNeNep,
-  pushNotification,
+  readFileViPham,
 } from "./helper.js";
 const supabase = createClient(
   "https://clcrfohusnfsddfklteg.supabase.co",
@@ -19,53 +19,32 @@ const store = reactive({
   handleUploadDiemHocTap(event) {
     const fileList = event.target.files;
     let file = fileList[0];
-    let fileName = file.name;
-    if (!fileName.endsWith(".xlsx")) {
-      pushNotification(
-        "error",
-        "File không đúng định dạng",
-        "Chỉ nhận file có đuôi .xlsx"
-      );
-      return;
-    }
-    if (this.diemHocTap.length > 0) {
+
+    if (this.diemHocTap?.length > 0) {
       this.diemHocTap = [];
     }
 
     let data = readFileDiemHocTap(file);
-    this.diemHocTap = data;
-    console.log(data);
+    if (data) {
+      this.diemHocTap = data;
+    }
   },
 
   handleUploadDiemNeNep(event) {
     const fileList = event.target.files;
     let file = fileList[0];
-    let fileName = file.name;
-    if (!fileName.endsWith(".xlsx")) {
-      pushNotification(
-        "error",
-        "File không đúng định dạng",
-        "Chỉ nhận file có đuôi .xlsx"
-      );
-
-      return;
-    }
-
-    if (this.diemNeNep.length > 0) {
+    if (this.diemNeNep?.length > 0) {
       this.diemNeNep = [];
     }
 
     let data = readFileDiemNeNep(file);
-    this.diemNeNep = data;
+    if (data) {
+      this.diemNeNep = data;
+    }
   },
 
   handleUploadViPham(event) {
-    pushNotification(
-      "warning",
-      "Tính năng chưa hoàn thiện",
-      "Tính năng này hiện chưa được triển khai đâu nha &#128555;"
-    );
-
+    readFileViPham();
     // const fileList = event.target.files;
     // let file = fileList[0];
     // let fileName = file.name;
@@ -73,21 +52,17 @@ const store = reactive({
     //   alert(`Khong dung dinh dang file Excel ${fileName}`);
     //   return;
     // }
-
     // if (store.viPham.length > 0) {
     //   store.viPham = [];
     // }
-
     // var reader = new FileReader();
     // // let tmpDiemHocTap = [];
     // reader.onload = function (e) {
     //   var data = e.target.result;
     //   /* reader.readAsArrayBuffer(file) -> data will be an ArrayBuffer */
     //   let workbook = read(data);
-
     //   let sheetNames = workbook.SheetNames;
     //   let firstSheet = workbook.Sheets[sheetNames[0]];
-
     //   let sheetData = utils.sheet_to_json(firstSheet, {
     //     header: 1,
     //     blankRows: false,
